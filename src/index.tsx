@@ -1,4 +1,4 @@
-import React from "react"
-import ReactDOM from "react-dom"
-import App from "./App/App.jsx"
-ReactDOM.render(<App />, document.getElementById("app"))
+import React from 'react'
+import ReactDOM from 'react-dom'
+
+ReactDOM.render(<div>demo</div>, document.getElementById('app'))

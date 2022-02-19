@@ -11,7 +11,7 @@ const productionModes = ['production', 'stage'];
     const isProduction = productionModes.includes(process.env.mode);
     const pathResolveFunc = (p) => path.resolve(__dirname, p);
 
-    const compiler = new webpack(config(isProduction, pathResolveFunc));
+    const compiler = webpack(config(isProduction, pathResolveFunc));
 
-    await compiler.compile(() => {})
+    await compiler.run(() => {})
 })();
