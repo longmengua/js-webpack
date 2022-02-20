@@ -21,7 +21,6 @@ module.exports = {
                     shared_config.tsLoader,
                     shared_config.cssLoader,
                     shared_config.fontLoader,
-                    shared_config.urlLoader,
                 ]
             }
         ]
