@@ -1,7 +1,10 @@
+const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const CopyPlugin = require('copy-webpack-plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+
 const path = require('../util')
-const webpack = require('webpack')
+const shared_config = require('./shared')
 
 module.exports = {
     mode: "production",
@@ -9,17 +12,16 @@ module.exports = {
     entry: path.resolve('src/index.tsx'),
     output: {
         path: path.resolve('build'),
-        filename: '[name].[contenthash:8].js',
+        filename: 'js/[name].[contenthash:8].js',
     },
     module: {
         rules: [
             {
                 oneOf: [
-                    {
-                        test: /\.tsx?$/,
-                        use: 'ts-loader',
-                        exclude: /node_modules/,
-                    },
+                    shared_config.tsLoader,
+                    shared_config.cssLoader,
+                    shared_config.fontLoader,
+                    shared_config.urlLoader,
                 ]
             }
         ]
@@ -28,14 +30,11 @@ module.exports = {
         runtimeChunk: 'single',
     },
     resolve: {
-        extensions: ['.tsx', '.ts', '.js', 'jsx'],
+        extensions: shared_config.extensions,
     },
     plugins: [
         new HtmlWebpackPlugin({
-            filename: 'index.html',
-            template: path.resolve('src/index.html'),
-            preview: process.env.PREVIEW,
-            mode: process.env.MODE,
+            ...shared_config.HtmlWebpackPluginConfig,
             minify: {
                 removeComments: true,
                 collapseWhitespace: true,
@@ -49,15 +48,8 @@ module.exports = {
                 minifyURLs: true,
             },
         }),
-        new CopyPlugin({
-            patterns: [
-                {
-                    from: path.resolve('public/'),
-                },
-            ],
-        }),
-        new webpack.ProvidePlugin({
-            process: 'process/browser',
-        }),
+        new webpack.ProvidePlugin(shared_config.ProvidePlugin),
+        new CopyPlugin(shared_config.CopyPluginConfig),
+        new MiniCssExtractPlugin(shared_config.MiniCssExtractPluginConfig),
     ]
 }

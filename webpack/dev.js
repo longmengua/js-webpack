@@ -1,6 +1,10 @@
+const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const CopyPlugin = require('copy-webpack-plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+
 const path = require('../util')
+const shared_config = require('./shared')
 
 module.exports = {
     mode: "development",
@@ -10,17 +14,15 @@ module.exports = {
     },
     output: {
         path: path.resolve('build'),
-        filename: '[name].js',
+        filename: 'js/[name].js',
     },
     module: {
         rules: [
             {
                 oneOf: [
-                    {
-                        test: /\.tsx?$/,
-                        use: 'ts-loader',
-                        exclude: /node_modules/,
-                    },
+                    shared_config.tsLoader,
+                    shared_config.cssLoader,
+                    shared_config.fontLoader,
                 ]
             }
         ]
@@ -32,18 +34,9 @@ module.exports = {
         extensions: ['.tsx', '.ts', '.js'],
     },
     plugins: [
-        new HtmlWebpackPlugin({
-            filename: 'index.html',
-            template: path.resolve('src/index.html'),
-            preview: process.env.PREVIEW,
-            mode: process.env.MODE,
-        }),
-        new CopyPlugin({
-            patterns: [
-                {
-                    from: path.resolve('public/'),
-                },
-            ],
-        }),
+        new HtmlWebpackPlugin(shared_config.HtmlWebpackPluginConfig),
+        new webpack.ProvidePlugin(shared_config.ProvidePlugin),
+        new CopyPlugin(shared_config.CopyPluginConfig),
+        new MiniCssExtractPlugin(shared_config.MiniCssExtractPluginConfig),
     ]
 }
