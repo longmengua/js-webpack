@@ -1,11 +1,16 @@
-module.exports = (pathResolveFunc) => ({
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+const CopyPlugin = require('copy-webpack-plugin')
+const path = require('../util')
+
+module.exports = {
     mode: "development",
+    bail: false,
     entry: {
-        index: pathResolveFunc('src/index.tsx')
+        index: path.resolve('src/index.tsx')
     },
     output: {
-        path: pathResolveFunc('build'),
-        filename: '[name].[contenthash: 8].js',
+        path: path.resolve('build'),
+        filename: '[name].js',
     },
     module: {
         rules: [
@@ -20,7 +25,25 @@ module.exports = (pathResolveFunc) => ({
             }
         ]
     },
+    optimization: {
+        runtimeChunk: 'single',
+    },
     resolve: {
         extensions: ['.tsx', '.ts', '.js'],
     },
-});
+    plugins: [
+        new HtmlWebpackPlugin({
+            filename: 'index.html',
+            template: path.resolve('src/index.html'),
+            preview: process.env.PREVIEW,
+            mode: process.env.MODE,
+        }),
+        new CopyPlugin({
+            patterns: [
+                {
+                    from: path.resolve('public/'),
+                },
+            ],
+        }),
+    ]
+}

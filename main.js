@@ -1,17 +1,29 @@
 const dotenv = require('dotenv');
 const webpack = require('webpack');
-const config = require('./webpack/webpack.config');
 const path = require('path');
 
-const productionModes = ['production', 'stage'];
+const productionModes = ['prod', 'stage'];
 
 (async () => {
     //load env variable
     dotenv.config({path: path.resolve('.env')});
     const isProduction = productionModes.includes(process.env.mode);
-    const pathResolveFunc = (p) => path.resolve(__dirname, p);
 
-    const compiler = webpack(config(isProduction, pathResolveFunc));
+    // load webpack config
+    const config = isProduction ? require('./webpack/prod') : require('./webpack/dev')
 
-    await compiler.run(() => {})
+    // console.log(config)
+    const compiler = webpack(config);
+
+    await compiler.run((err, stats) => {
+        if(err){
+            console.error(err)
+            return
+        }
+        if(!stats?.compilation) return
+        if(stats?.compilation.errors){
+            console.error(stats?.compilation.errors)
+            return
+        }
+    })
 })();
