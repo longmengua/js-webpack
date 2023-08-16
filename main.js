@@ -15,15 +15,15 @@ const productionModes = ['prod', 'stage'];
     // console.log(config)
     const compiler = webpack(config);
 
-    await compiler.run((err, stats) => {
-        if(err){
-            console.error(err)
-            return
+    compiler.run((err, stats) => {
+        if (err) {
+            console.error(err);
+            return;
         }
-        if(!stats?.compilation) return
-        if(stats?.compilation.errors){
-            console.error(stats?.compilation.errors)
-            return
+        if (!stats?.compilation) return;
+        if (stats?.compilation.errors) {
+            console.error(stats?.compilation.errors);
+            return;
         }
     })
 })();

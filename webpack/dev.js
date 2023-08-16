@@ -9,6 +9,8 @@ const shared_config = require('./shared')
 module.exports = {
     mode: "development",
     bail: false,
+    watch: true, // keep watching change.
+    stats: true, // show information about bundle size.
     entry: {
         index: path.resolve('src/index.tsx')
     },

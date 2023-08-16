@@ -1,5 +1,6 @@
 const path = require('../util')
 const MiniCssExtractPlugin = require("mini-css-extract-plugin")
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 module.exports = {
 	MiniCssExtractPluginConfig: {
@@ -82,4 +83,7 @@ module.exports = {
 			},
 		],
 	},
+	plugins: [
+		new BundleAnalyzerPlugin(), // displaying the bundle visualization.
+	]
 }
